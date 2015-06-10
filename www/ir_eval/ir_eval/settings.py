@@ -60,18 +60,10 @@ WSGI_APPLICATION = 'ir_eval.wsgi.application'
 
 DATABASES = {
     'default': {
-        #'NAME': 'xliu_cpeg657_14s_1',
-        # 'NAME': 'xliu_cpeg657_14s_2',
-        # 'USER': 'xliu',
-        # 'PASSWORD': 'who',
-        # 'HOST': '127.0.0.1',
-        #'PORT': '3306',
-        #'PORT': '8889',
-        # force to use INNODB engine
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'judge',
-        'USER': 'yuewang',
-        'PASSWORD': 'wangyue0727',
+        'NAME': '',     # database name
+        'USER': '',     # User name
+        'PASSWORD': '', # User Password
         'HOST': '',
         'PORT': '',
         'OPTIONS': {
