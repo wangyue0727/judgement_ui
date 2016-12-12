@@ -70,11 +70,6 @@ def query(request, query_id) :
         'assessor': assessor,
     })
 
-  # total_count = Assessment.objects.filter(query=query).count()
-  # done_count = Assessment.objects.filter(query=query,
-  #   has_assessed=True).count()
-  # left_count = Assessment.objects.filter(query=query,
-  #   has_assessed=False).count()
   total_count = get_count(query,"total")
   done_count = get_count(query,"done")
   left_count = get_count(query,"left")
@@ -160,12 +155,6 @@ def assessment(request, assessment_id) :
     category = Categories.objects.filter(category=assessment.document.category).order_by('pk')
   except Document.DoesNotExist :
     raise Http404
-  # for doc in docs:
-  #   doc.data = base64.b64decode(doc.data)
-  #   return_list.append(doc);
-  # print "------------"
-  # for item in assessment_all:
-  #   print item
   return render_to_response('assessment.html', {
     'assessor': assessor, 'query': query, 'sentences': assessment_all, 'assessment': assessment, 'category' : category},
     context_instance=RequestContext(request))
@@ -233,11 +222,6 @@ def label(request, assessment_id) :
       msg = 'You do not have access to the query!'
       return error_json_response(msg)
 
-  # if 'relevance' not in request.POST :
-  #   msg = 'Relevance not judged!'
-  #   return error_json_response(msg)
-  # relevance = request.POST['relevance']
-
   # post_content = base64.b64decode(request.POST.['keywords'])
   posted_content = request.POST.dict()
 
@@ -274,33 +258,10 @@ def label(request, assessment_id) :
       target.assessed_by = assessor.user.username  
       now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
       target.last_modified = now 
-      # print target.relevance
-      # print target.has_assessed
-      # print target.aspect
-      # print target.keywords
-      # print target.assessed_by
-      # print target.last_modified 
       target.save()
     except Assessment.DoesNotExist :
       msg = 'Internal Error: Cannot find the assessment!'
-      return error_json_response(msg)
-  # print posted_content['keywords'][1]
-  # if 'highly' == relevance :
-  #   assessment.relevance = 2
-  # elif 'yes' == relevance :
-  #   assessment.relevance = 1
-  # elif 'no' == relevance :
-  #   assessment.relevance = 0
-  # else :
-  #   msg = 'Unknown relevance!'
-  #   return error_json_response(msg)
-  
-  # assessment.assessed_by = assessor.user.username
-
-  # assessment.has_assessed = True
-  # now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-  # assessment.last_modified = now
-  
+      return error_json_response(msg) 
 
   response = {'info': 'Assessment updated.',
     'redirect': reverse('assess.views.query', args=[query.pk])

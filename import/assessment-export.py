@@ -32,17 +32,12 @@ class MyDB(object) :
   '''
   Configuration of MySQL DB
   '''
-  # HOST = '127.0.0.1'
-  # PORT = 3306
-  # USER = 'xliu'
-  # PASSWD = 'who'
-  # #DB = 'xliu_cpeg657_14s_1'
-  # DB = 'xliu_cpeg657_14s_2'
   HOST = '127.0.0.1'
   PORT = 3306
   USER = 'yuewang'
   PASSWD = 'wangyue0727'
-  DB = 'judge' 
+  DB = 'judge'
+  CHAR_SET='utf8' 
 
 def load_query () :
   '''
@@ -188,7 +183,7 @@ def test_db() :
   '''
   try :
     con = mdb.connect(host=MyDB.HOST, port=MyDB.PORT, user=MyDB.USER,
-        passwd=MyDB.PASSWD, db=MyDB.DB)
+        passwd=MyDB.PASSWD, db=MyDB.DB, charset=MyDB.CHAR_SET)
     cur = con.cursor()
     cur.execute('SELECT VERSION()')
     ver = cur.fetchone()
@@ -209,7 +204,7 @@ def init_db() :
   try :
     global DB_CON
     DB_CON = mdb.connect(host=MyDB.HOST, port=MyDB.PORT, user=MyDB.USER,
-        passwd=MyDB.PASSWD, db=MyDB.DB)
+        passwd=MyDB.PASSWD, db=MyDB.DB, charset=MyDB.CHAR_SET)
     if DB_CON :
       print '[Info] DB connection initialized'
     else :

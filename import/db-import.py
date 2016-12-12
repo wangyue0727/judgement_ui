@@ -68,6 +68,7 @@ class MyDB(object) :
   USER = 'yuewang'
   PASSWD = 'wangyue0727'
   DB = 'judge'  
+  CHAR_SET='utf8'
 
 def load_assessor (file_path) :
   '''
@@ -299,13 +300,6 @@ def import_doc(db_cur, doc_id, doc_data) :
   if '' == title :
     title = 'N/A'
 
-  # apply base64 encoding, therefore base64 decoding should be applied
-  # when data is fetched from DB
-  #title = title.decode('ascii', 'replace')
-  #doc_data = doc_data.decode('ascii', 'replace')
-  #title = unicode(title, errors = 'ignore')
-  #doc_data = unicode(doc_data, errors = 'ignore')
-  # title_b64 = base64.b64encode(remove_non_ascii(title))
   title_b64 = base64.b64encode(title)
   sent_id = 't'
   sql = 'INSERT INTO %s(doc_id,sentence_id,data,category) VALUES'\
@@ -407,7 +401,7 @@ def test_db() :
   '''
   try :
     con = mdb.connect(host=MyDB.HOST, port=MyDB.PORT, user=MyDB.USER,
-        passwd=MyDB.PASSWD, db=MyDB.DB)
+        passwd=MyDB.PASSWD, db=MyDB.DB, charset=MyDB.CHAR_SET)
     cur = con.cursor()
     cur.execute('SELECT VERSION()')
     ver = cur.fetchone()
@@ -428,7 +422,7 @@ def init_db() :
   try :
     global DB_CON
     DB_CON = mdb.connect(host=MyDB.HOST, port=MyDB.PORT, user=MyDB.USER,
-        passwd=MyDB.PASSWD, db=MyDB.DB)
+        passwd=MyDB.PASSWD, db=MyDB.DB, charset=MyDB.CHAR_SET)
     if DB_CON :
       print '[Info] DB connection initialized'
     else :
@@ -576,14 +570,11 @@ def main() :
     assessor_id = query_dict[counter]['assessor_id']
     title = query_dict[counter]['title']
     desc = query_dict[counter]['desc']
-    # asdf = u'sadf'
-    # print asdf, type(asdf)
-    # print title, type(title)
     sql = 'INSERT INTO %s(qid,assessor_id,title,description)'\
         'VALUES(%s,%s,' %(QUERY_TABLE, query_id, assessor_id)
     sql += '%s,%s)'
     try :
-      db_cur.execute(sql, (title.encode('utf-8'), desc.encode('utf-8')))
+      db_cur.execute(sql, (title, desc))
       # http://stackoverflow.com/a/3790542
       query_rev_dict[query_id] = db_cur.lastrowid
       item = dict()
